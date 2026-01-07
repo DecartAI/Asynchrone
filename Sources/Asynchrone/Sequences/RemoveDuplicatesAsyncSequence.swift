@@ -104,7 +104,7 @@ Base.Element: Sendable {}
 
 // MARK: Remove duplicates
 
-extension AsyncSequence where Element: Equatable {
+extension AsyncSequence where Element: Equatable & Sendable {
     /// Emits only elements that don't match the previous element.
     /// - Returns: A `AsyncRemoveDuplicatesSequence` instance.
     public func removeDuplicates() -> RemoveDuplicatesAsyncSequence<Self> {
