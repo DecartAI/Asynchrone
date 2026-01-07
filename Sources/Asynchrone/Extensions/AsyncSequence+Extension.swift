@@ -35,9 +35,10 @@ extension AsyncSequence {
         to keyPath: ReferenceWritableKeyPath<Root, Element>,
         on object: Root
     ) rethrows -> Task<Void, Error> where Self: Sendable, Root: Sendable {
+        let sendableKeyPath = UnsafeSendable(keyPath)
         Task {
             for try await element in self {
-                object[keyPath: keyPath] = element
+                object[keyPath: sendableKeyPath.value] = element
             }
         }
     }

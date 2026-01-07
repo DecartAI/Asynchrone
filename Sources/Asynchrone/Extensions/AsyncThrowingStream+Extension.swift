@@ -21,7 +21,7 @@ extension AsyncThrowingStream {
         _ elementType: Element.Type = Element.self,
         bufferingPolicy limit: AsyncThrowingStream<Element, Failure>.Continuation.BufferingPolicy = .unbounded,
         _ build: @Sendable @escaping (AsyncThrowingStream<Element, Failure>.Continuation) async -> Void
-    ) where Failure == Error {
+    ) where Failure == Error, Element: Sendable {
         self = AsyncThrowingStream(elementType, bufferingPolicy: limit) { continuation in
             let task = Task {
                 await build(continuation)
@@ -40,7 +40,7 @@ extension AsyncThrowingStream {
 extension AsyncThrowingStream.Continuation {
     /// Yield the provided value and then finish the stream.
     /// - Parameter value: The value to yield to the stream.
-    public func finish(with value: Element) {
+    public func finish(with value: Element) where Element: Sendable {
         self.yield(value)
         self.finish()
     }

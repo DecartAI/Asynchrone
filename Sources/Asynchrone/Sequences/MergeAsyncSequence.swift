@@ -35,7 +35,7 @@
 /// // 8
 /// // 9
 /// ```
-public struct MergeAsyncSequence<T>: AsyncSequence, Sendable where T: AsyncSequence, T: Sendable {
+public struct MergeAsyncSequence<T>: AsyncSequence, Sendable where T: AsyncSequence, T: Sendable, T.Element: Sendable {
     public typealias Element = T.Element
     
     // Private

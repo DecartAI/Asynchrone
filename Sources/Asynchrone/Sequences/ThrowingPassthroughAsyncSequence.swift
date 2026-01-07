@@ -21,7 +21,7 @@
 /// // 2
 /// // Error!
 /// ```
-public struct ThrowingPassthroughAsyncSequence<Element>: AsyncSequence {
+public struct ThrowingPassthroughAsyncSequence<Element: Sendable>: AsyncSequence {
     private var stream: AsyncThrowingStream<Element, Error>!
     private var continuation: AsyncThrowingStream<Element, Error>.Continuation!
 
@@ -75,4 +75,4 @@ public struct ThrowingPassthroughAsyncSequence<Element>: AsyncSequence {
     }
 }
 
-extension ThrowingPassthroughAsyncSequence: Sendable where Element: Sendable {}
+extension ThrowingPassthroughAsyncSequence: Sendable {}
