@@ -51,10 +51,14 @@ public struct NotificationCenterAsyncSequence: AsyncSequence {
 // MARK: Iterator
 
 extension NotificationCenterAsyncSequence {
+    private struct UncheckedSendable<Value>: @unchecked Sendable {
+        let value: Value
+    }
+
     public struct Iterator: AsyncIteratorProtocol {
         private var notificationCenter: NotificationCenter
-        private var passthroughAsyncSequence: PassthroughAsyncSequence<Notification> = .init()
-        private var iterator: PassthroughAsyncSequence<Notification>.AsyncIterator
+        private var passthroughAsyncSequence: PassthroughAsyncSequence<UncheckedSendable<Notification>> = .init()
+        private var iterator: PassthroughAsyncSequence<UncheckedSendable<Notification>>.AsyncIterator
         private var observer: Any?
         
         // MARK: Initialization
@@ -72,14 +76,14 @@ extension NotificationCenterAsyncSequence {
                 object: object,
                 queue: nil
             ) { [passthroughAsyncSequence] notification in
-                passthroughAsyncSequence.yield(notification)
+                passthroughAsyncSequence.yield(UncheckedSendable(value: notification))
             }
         }
         
         // MARK: AsyncIteratorProtocol
         
         public mutating func next() async -> Element? {
-            guard let value = await self.iterator.next() else {
+            guard let value = await self.iterator.next()?.value else {
                 if let observer = observer {
                     self.notificationCenter.removeObserver(observer)
                 }
