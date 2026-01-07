@@ -27,8 +27,5 @@ let package = Package(
         .target(
             name: "Asynchrone",
             dependencies: []),
-        .testTarget(
-            name: "AsynchroneTests",
-            dependencies: ["Asynchrone"]),
     ]
 )
